@@ -1,0 +1,14 @@
+.message-box input {
+    height: 60px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #838383;
+    padding-inline: 10px;
+}
+.message-box {
+    width: 100%;
+    height: 60px !important;
+}
+.message-box div[part='input-field'] {
+    border-radius: 10px;
+}
