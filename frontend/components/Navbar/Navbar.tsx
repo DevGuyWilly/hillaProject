@@ -1,12 +1,21 @@
 import {List} from "@mui/material";
 import {NavbarData} from "./NavbarData";
 import {NavItem} from "Frontend/components";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {VerticalLayout} from "@hilla/react-components/VerticalLayout";
 import Logo from "Frontend/assets/logo.png";
 import {Link} from "react-router-dom";
+import {ChatEndPoint} from "Frontend/generated/endpoints";
 
 export const Navbar : React.FC = () => {
+    const [allUnviewed, setAllUnviewed] = useState(0);
+
+    useEffect(() => {
+        ChatEndPoint.countUnViewed().then(count => {
+            setAllUnviewed(count);
+        })
+    }, []);
+
   return(
       <VerticalLayout theme="spacing" style={{
           width: "100%",
@@ -29,7 +38,7 @@ export const Navbar : React.FC = () => {
                   menu={data.title}
                   icon={data.icon}
                   iconSelected={data.iconSelected}
-                  newCount={2}
+                  newCount={data.title === "Messages" ? allUnviewed : 0}
               />
           )}
       </VerticalLayout>

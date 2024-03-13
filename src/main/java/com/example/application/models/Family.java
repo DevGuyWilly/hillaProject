@@ -1,17 +1,21 @@
 package com.example.application.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "families")
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class Family {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    public String id;
-    public String members;
-    public String[] getMembers() {
-        return members.split(",");
-    }
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Integer id;
+    @OneToMany(mappedBy = "family")
+    private List<User> members = new ArrayList<>();
 }

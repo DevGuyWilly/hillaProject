@@ -24,6 +24,7 @@
     "@mui/material": "^5.15.11",
     "@mui/x-charts": "^6.19.5",
     "@polymer/polymer": "3.5.1",
+    "@reduxjs/toolkit": "^2.2.1",
     "@vaadin/bundles": "24.3.0",
     "@vaadin/common-frontend": "0.0.19",
     "@vaadin/router": "1.7.5",
@@ -34,6 +35,7 @@
     "lit": "3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^9.1.0",
     "react-router-dom": "^6.4.2"
   },
   "devDependencies": {
@@ -89,7 +91,9 @@
     "@mui/material": "$@mui/material",
     "highcharts-react-official": "$highcharts-react-official",
     "highcharts": "$highcharts",
-    "@mui/x-charts": "$@mui/x-charts"
+    "@mui/x-charts": "$@mui/x-charts",
+    "@reduxjs/toolkit": "$@reduxjs/toolkit",
+    "react-redux": "$react-redux"
   },
   "vaadin": {
     "dependencies": {
@@ -133,6 +137,6 @@
       "workbox-core": "7.0.0",
       "workbox-precaching": "7.0.0"
     },
-    "hash": "8c37743421286804c906e85a2340a15df2afb949384813312c819acc0d0e8461"
+    "hash": "77fab6918b9dde39eda3f650ad12d2ddc36b89efc97fb340f9ddf8e907431adc"
   }
 }

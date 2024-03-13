@@ -4,10 +4,13 @@ import {VerticalLayout} from "@hilla/react-components/VerticalLayout";
 import Typography from "@mui/material/Typography";
 import {Icon} from "@hilla/react-components/Icon";
 import {Button} from "@hilla/react-components/Button";
+import {useSelector} from "react-redux";
+import {AuthSelectors} from "Frontend/redux/feat/auth/authSelectors";
 
 interface MessageToolbarProps {
 }
 export const MessageToolbar: React.FC = () => {
+    const chattingUser = useSelector(AuthSelectors.getChattingUser());
     return (
         <HorizontalLayout style={{
             height: "80px",
@@ -23,7 +26,7 @@ export const MessageToolbar: React.FC = () => {
                     fontWeight: "Bold",
                     fontSize: "30px",
                     color: "#000"
-                }}>James Camps</Typography>
+                }}>{chattingUser?.fullName}</Typography>
                 <Typography style={{
                     fontWeight: "Medium",
                     fontSize: "16px",

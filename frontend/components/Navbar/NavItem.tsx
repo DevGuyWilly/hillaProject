@@ -29,7 +29,7 @@ export const NavItem : React.FC<NavItemProps> = (props) => {
                         textTransform: 'capitalize',
                         color: isMatch ? "#FFF": "#9F9F9F"
                     }}/>
-                    {props.newCount && <Badge
+                    {props.newCount !== 0 && <Badge
                         badgeContent={props.newCount}
                         color="error"
                         sx={{

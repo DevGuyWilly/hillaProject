@@ -1,19 +1,22 @@
 package com.example.application.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity(name = "files")
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class File {
-    enum FileType {
-        DOC, VIDEO, AUDIO, ZIP, APP, BINARY
-    }
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    public String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Integer id;
     public String fileName;
-    public int fileSize;
-    public Enum<FileType> fileType;
+    public Long fileSize;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "message_id")
+    public Message message;
 }

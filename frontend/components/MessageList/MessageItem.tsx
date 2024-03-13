@@ -6,20 +6,17 @@ import message from "Frontend/generated/com/example/application/models/Message";
 
 interface MessageItemProps {
     message: Message;
+    style: Object;
 }
-
-const myId = "1";
+const formatTime= (date: string) => {
+    const temp: Date = new Date(date);
+    return `${temp.getHours()
+        .toString()
+        .padStart(2, '0')}:${temp.getMinutes().toString().padStart(2, '0')}`;
+}
 export const MessageItem : React.FC<MessageItemProps> = (props) => {
     return (
-        <VerticalLayout style={{
-            maxWidth: "53%",
-            borderRadius: "10px",
-            backgroundColor: props.message.fromUser === myId ? "#5BC4FF" : "#5BC4FF2E",
-            padding: "14px 34px 9px 25px",
-            color: props.message.fromUser === myId ? "#FFF" : "#373737",
-            marginBottom: "23px",
-            alignSelf: props.message.fromUser === myId ? "end" : "start"
-        }}>
+        <VerticalLayout style={props.style}>
             <Typography style={{
                 fontSize: "16px",
                 fontWeight: "SemiBold",
@@ -28,7 +25,7 @@ export const MessageItem : React.FC<MessageItemProps> = (props) => {
                 fontSize: "14px",
                 fontWeight: "Medium",
                 alignSelf: "end"
-            }}>{props.message.time}</Typography>
+            }}>{props.message.time && formatTime(props.message.time)}</Typography>
         </VerticalLayout>
     )
 }

@@ -36,7 +36,9 @@ export const ActivityList : React.FC = () => {
             marginBottom: "80px"
         }}>
             {Activities.map(item =>
-                <HorizontalLayout style={{
+                <HorizontalLayout
+                    key={item.id}
+                    style={{
                     alignItems: 'center',
                     width: "100%",
                     justifyContent: 'space-between',

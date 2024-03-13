@@ -1,10 +1,17 @@
-import React from "react";
+import React, {useEffect} from "react";
 
 import {HorizontalLayout} from "@hilla/react-components/HorizontalLayout";
 import {VerticalLayout} from "@hilla/react-components/VerticalLayout";
 import Typography from "@mui/material/Typography";
 import {ContactList, MessageList} from "Frontend/components"
+import {useAppDispatch} from "Frontend/redux/hooks";
+import {AuthThunks} from "Frontend/redux/feat/auth/authThunks";
 export const ChatPage : React.FC = () => {
+    const dispatch  = useAppDispatch();
+
+    useEffect(() => {
+        dispatch(AuthThunks.getAllUsers())
+    }, [])
     return (
         <HorizontalLayout style={{
             width: "100%",
