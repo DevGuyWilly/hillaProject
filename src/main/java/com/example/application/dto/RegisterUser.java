@@ -3,6 +3,8 @@ package com.example.application.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.io.Serializable;
+
 public record RegisterUser(
         @NotBlank(message = "Please enter your full name")
         String fullName,
@@ -13,5 +15,5 @@ public record RegisterUser(
         String password,
         @NotBlank(message = "Please enter your phone number")
         String phone
-) {
+) implements Serializable {
 }

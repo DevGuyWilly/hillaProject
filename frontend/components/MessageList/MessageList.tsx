@@ -3,8 +3,8 @@ import {MessageToolbar} from "Frontend/components/MessageList/MessageToolbar";
 import {MessageItem} from "Frontend/components/MessageList/MessageItem";
 import {useSelector} from "react-redux";
 import {AuthSelectors} from "Frontend/redux/feat/auth/authSelectors";
-import {useEffect, useState} from "react";
-import {ChatEndPoint} from "Frontend/generated/endpoints";
+import {useEffect, useRef, useState} from "react";
+import {ChatEndPoint, ChatEndPoint1} from "Frontend/generated/endpoints";
 import {useAppDispatch} from "Frontend/redux/hooks";
 import Message from "Frontend/generated/com/example/application/models/Message";
 import User from "Frontend/generated/com/example/application/models/User";
@@ -13,6 +13,7 @@ import {TextField} from "@hilla/react-components/TextField";
 import {Button} from "@hilla/react-components/Button";
 import {Icon} from "@hilla/react-components/Icon";
 import "./MessageBox.css"
+import {Subscription} from "@hilla/frontend";
 
 const msgStyle = (sender: User, me: User) => ({
     maxWidth: "53%",
@@ -31,16 +32,17 @@ export const MessageList : React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
 
     const [message, setMessage] = useState("");
+    const scrollRef = useRef<HTMLDivElement>(null);
+
     const sendMessage = () => {
         if(me && chattingUser) {
             const msg: Message = {
                 message: message,
                 sender: me,
                 receiver: chattingUser,
-                viewed: false
+                viewed: true
             };
-            ChatEndPoint.send(msg).then((msg) => {
-                msg && setMessages(prevState => [...prevState, msg]);
+            ChatEndPoint1.sendMessage(msg).then((msg) => {
                 setMessage("");
             });
         }
@@ -50,17 +52,21 @@ export const MessageList : React.FC = () => {
     }
 
     useEffect(() => {
+        setMessages([]);
+        let flux: any = null;
         if(chattingUser && chattingUser?.id) {
-            const flux = ChatEndPoint.contact(chattingUser);
-            flux.onNext((message) => {
-                message && setMessages(prevState => [...prevState, message]);
-                return () => {
-                    flux.cancel();
-                    setMessages([]);
-                }
-            })
+            flux = ChatEndPoint1.getMessages(me, chattingUser);
+            flux.onNext((msg: any) => {
+                msg && setMessages(prevState => [...prevState, msg]);
+            });
+
+        }
+        return () => {
+            flux && flux.cancel();
         }
     }, [chattingUser, chattingUser?.id]);
+
+
 
     return (
         <VerticalLayout style={{
@@ -69,72 +75,53 @@ export const MessageList : React.FC = () => {
             height: "100%"
         }}>
             <MessageToolbar/>
-            <VerticalLayout style={{
+            <div
+                ref={scrollRef}
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
                 width: "100%",
-                height: "calc(100% - 280px)",
+                height: "calc(100% - 160px)",
                 overflowY: 'auto',
                 margin: "10px 0"
             }}>
                 {
                     messages && messages.map(message =>
-                        message && chattingUser && me && <MessageItem
+                        message?.sender && me && <MessageItem
                             key={message.id}
                             message={message}
-                            style={msgStyle(chattingUser, me)}
+                            style={msgStyle(message.sender, me)}
                         />)
                 }
-            </VerticalLayout>
-            <VerticalLayout style={{
-                width: "100%",
-                height: "min-content",
-                backgroundColor: "#F5F5F5",
-                borderRadius: "10px",
-            }}>
-                <HorizontalLayout style={{
-                    width: "100%",
-                    height: "80px"
-                }}>
-                    <TextField placeholder={"Your message"}
-                               value={message}
-                               onChange={e => setMessage(e.target.value)}
-                               onKeyDown={e => {
-                                    if(e.keyCode === 13) {
-                                        sendMessage()
-                                    }
-                               }}
-                               clearButtonVisible className={"message-box"}
-                               style={{
-                                   width: "100%",
-                                   marginBottom: "20px",
-                               }}>
-                        <Button slot="prefix" theme="icon"
-                                onClick={selectFile}
-                                style={{
-                                    backgroundColor: 'transparent',
-                                    marginInline: "10px"
-                                }}>
-                            <Icon slot="prefix" icon="vaadin:paperclip" style={{
-                                color: "#000",
-                            }}/>
-                        </Button>
-                        <Button slot="suffix" theme="icon"
-                                onClick={sendMessage}
-                                style={{
-                                    backgroundColor: 'transparent',
-                                    marginRight: "15px"
-                                }}>
-                            <Icon slot="prefix" icon="vaadin:paperplane-o" style={{
-                                color: "#000",
-                            }}/>
-                        </Button>
-                    </TextField>
-                </HorizontalLayout>
-                <HorizontalLayout style={{
-                    height: '100px'
-                }}>
-
-                </HorizontalLayout>
-            </VerticalLayout>
+            </div>
+                <TextField placeholder={"Your message"}
+                           value={message}
+                           onChange={e => setMessage(e.target.value)}
+                           clearButtonVisible className={"message-box"}
+                           style={{
+                               width: "100%",
+                           }}>
+                    <Button slot="prefix" theme="icon"
+                            onClick={selectFile}
+                            style={{
+                                backgroundColor: 'transparent',
+                                marginInline: "10px"
+                            }}>
+                        <Icon slot="prefix" icon="vaadin:paperclip" style={{
+                            color: "#000",
+                        }}/>
+                    </Button>
+                    <Button slot="suffix" theme="icon"
+                            onClick={sendMessage}
+                            style={{
+                                backgroundColor: 'transparent',
+                                marginRight: "15px"
+                            }}>
+                        <Icon slot="prefix" icon="vaadin:paperplane-o" style={{
+                            color: "#000",
+                        }}/>
+                    </Button>
+                </TextField>
         </VerticalLayout>
     )
 }

@@ -76,7 +76,8 @@ export const ContactItem :React.FC<ContactItemProps> = (props) => {
                             fontWeight: "Medium",
                             color: unviewedMsgs === 0 ? "#9F9F9F" : "#1B84BF",
                             textTransform: "none"
-                        }}>{ lastMsg?.message && (
+                        }}>{ lastMsg?.message && lastMsg.sender?.id === me?.id ? "You : " : ""}
+                            { lastMsg?.message && (
                             lastMsg.message.length > 25 + (!unviewedMsgs? 5 : 0) ?
                                 `${lastMsg.message.substring(0, 25 + (!unviewedMsgs? 5 : 0))}...` : lastMsg.message)
                         }

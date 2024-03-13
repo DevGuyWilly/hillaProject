@@ -8,24 +8,22 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 @Service
 public class ChatService {
     private final MessageRepository messageRepo;
-    private final Map<Integer, Sinks.Many<Message>> chatContacts = new ConcurrentHashMap<>();
-    private final Map<Integer, Flux<Message>> replayedFluxes = new ConcurrentHashMap<>();
+
+
+    private final Map<Integer, Sinks.Many<Message>> chatContacts = new HashMap<>();
+    private final Map<Integer, Flux<Message>> replayedFluxes = new HashMap<>();
     public ChatService(MessageRepository messageRepo, UserRepository userRepo) {
         this.messageRepo = messageRepo;
     }
 
-    public Flux<Message> contact(Integer userId) {
-        Sinks.Many<Message> sink = chatContacts.computeIfAbsent(userId, id -> Sinks.many().multicast().directBestEffort());
-        return replayedFluxes.computeIfAbsent(userId, id -> sink.asFlux());
+    public Flux<Message> contact(User sender, User receiver) {
+        Sinks.Many<Message> sink = chatContacts.computeIfAbsent(receiver.id, id -> Sinks.many().multicast().directBestEffort());
+        return Flux.fromIterable(getMessagesByContact(sender, receiver));
     }
 
     public Message sendMessage(Message message) {
@@ -50,5 +48,13 @@ public class ChatService {
 
     public Optional<Message> getLastMessage(User sender, User receiver) {
         return messageRepo.findNewestMessageByContact(sender.id, receiver.id);
+    }
+
+    public void MarkAsViewed(User sender, User receiver) {
+        List<Message> messages = messageRepo.getMessagesByViewedIsFalseAndSenderIsAndReceiverIs(sender, receiver);
+        messages.stream().map(message -> {
+            message.setViewed(true);
+            return messageRepo.save(message);
+        });
     }
 }

@@ -21,8 +21,8 @@ public class ChatEndPoint {
         this.chatService = chatService;
     }
 
-    public Flux<Message> contact(User user) {
-        return chatService.contact(user.id);
+    public Flux<Message> contact(User sender, User receiver) {
+        return chatService.contact(sender, receiver);
     }
     public Message send(Message message) {
         return chatService.sendMessage(message);
@@ -42,5 +42,9 @@ public class ChatEndPoint {
 
     public List<Message> getMessages(User sender, User receiver) {
         return chatService.getMessagesByContact(sender, receiver);
+    }
+
+    public void markAsViewed(User sender, User receiver) {
+        chatService.MarkAsViewed(sender, receiver);
     }
 }

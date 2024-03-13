@@ -12,11 +12,14 @@ import {UserEndPoint} from "Frontend/generated/endpoints";
 import {AuthSelectors} from "Frontend/redux/feat/auth/authSelectors";
 import {useAppDispatch} from "Frontend/redux/hooks";
 import {AuthActions} from "Frontend/redux/feat/auth/authSlice";
+import useHistory from "Frontend/hooks/useHistory";
+import UserStatus from "Frontend/generated/com/example/application/dto/UserStatus";
 
 export const MainComponent = () => {
     const me = useSelector(AuthSelectors.getCurrentUser());
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const preUrl = useHistory();
 
     useEffect(() => {
         const userString = sessionStorage.getItem("user");
@@ -36,6 +39,9 @@ export const MainComponent = () => {
     useEffect(() => {
         if(!me) {
             navigate("/login")
+        } else {
+            navigate(preUrl);
+            UserEndPoint.send({userId: me.id || 0, status: UserStatus.ONLINE})
         }
     }, [me])
 
@@ -72,9 +78,9 @@ export default function App() {
       <Provider store={store}>
           <Router>
               <Routes>
-                  <Route path="/*" Component={MainComponent}/>
-                  <Route path="/login" Component={SignIn}/>
                   <Route path="/signup" Component={SignUp}/>
+                  <Route path="/login" Component={SignIn}/>
+                  <Route path="/*" Component={MainComponent}/>
               </Routes>
           </Router>
       </Provider>

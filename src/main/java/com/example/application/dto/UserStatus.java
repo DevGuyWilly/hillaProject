@@ -1,5 +1,7 @@
 package com.example.application.dto;
 
-public enum UserStatus {
+import java.io.Serializable;
+
+public enum UserStatus implements Serializable {
     ONLINE, OFFLINE
 }

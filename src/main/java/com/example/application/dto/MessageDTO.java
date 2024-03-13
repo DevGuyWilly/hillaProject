@@ -15,7 +15,6 @@ public record MessageDTO(
         Instant time,
         boolean viewed,
         User sender,
-        User receiver,
-        List<File> files
+        User receiver
 ) implements Serializable {
 }

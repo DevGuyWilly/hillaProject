@@ -33,10 +33,6 @@ public class User implements Serializable {
     @ManyToOne
     @JoinColumn(name = "family_id")
     public Family family;
-    @OneToMany(mappedBy = "sender")
-    public List<Message> sendMessages = new ArrayList<>();
-    @OneToMany(mappedBy = "receiver")
-    public List<Message> receivedMessages = new ArrayList<>();
 
     public UserDTO toDTO() {
         return new UserDTO(id, fullName, email, avatar, phone);

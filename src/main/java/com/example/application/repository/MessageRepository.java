@@ -17,6 +17,8 @@ public interface MessageRepository extends JpaRepository<Message, Integer>, JpaS
     List<Message> getMessagesBySenderIsAndReceiverIsOrReceiverIsAndSenderIsOrderByTime(User sender, User receiver, User user1, User user2);
     int countMessagesByViewedIsFalse();
     int countMessagesByViewedIsFalseAndSenderIsAndReceiverIs(User sender, User receiver);
+    int countMessagesBySenderIsAndReceiverIs(User sender, User receiver);
+    List<Message> getMessagesByViewedIsFalseAndSenderIsAndReceiverIs(User sender, User receiver);
 
     @Query("""
                 SELECT msg FROM Message msg
